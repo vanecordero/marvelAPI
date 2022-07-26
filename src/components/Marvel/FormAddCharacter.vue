@@ -80,7 +80,9 @@ console.log(props.formProps)
             id:startId.value,
             name: data.name,
             description: data.description,
-            src: typeof imgsrc.value !== "string"? ShadowHero : imgsrc.value, //conditional url in case it comes empty
+            src: typeof imgsrc.value !== "string" 
+                ? props.formProps.mode === 'Edit'? props.formProps.ele.src : ShadowHero 
+                : imgsrc.value, //conditional url in case it comes empty
             modified: new Date(),
         }
         props.formProps.setNewData(newVal)
