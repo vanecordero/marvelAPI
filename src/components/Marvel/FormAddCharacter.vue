@@ -1,28 +1,45 @@
 <template>
-    <p>{{formProps.mode}} character</p>
-    <form @submit.prevent="handleSubmit">
-        <input 
-            name="name" 
-            placeholder="name"
-            :value="formProps.mode === 'Edit' ? formProps.ele.name : ''"
-        />
-        <span v-if="error">This field is required</span>
-        <textarea 
-            name="description" 
-            placeholder="description" 
-            rows="5" maxlength="250"
-            :value="formProps.mode === 'Edit' ? formProps.ele.description:''"
-        >
-        </textarea>
-        <input 
+    <p class="marvel_form-title font__comicReg">{{formProps.mode}} character</p>
+    <form 
+    class="marvel__form"
+        @submit.prevent="handleSubmit">
+        <div>
+            <label class="font__comicReg" for="name">Name</label>
+            <input 
+                name="name" 
+                placeholder="name"
+                :value="formProps.mode === 'Edit' ? formProps.ele.name : ''"
+            />
+             <span v-if="error" class="marvel__form_input--error" >This field is required</span>
+
+        </div>
+        <div>
+            
+            <label class="font__comicReg" for="description">Description</label>
+            <textarea 
+                name="description" 
+                placeholder="Description" 
+                rows="5" maxlength="250"
+                :value="formProps.mode === 'Edit' ? formProps.ele.description:''"
+            >
+            </textarea>
+        </div>
+        <div>
+            <label class="font__comicReg">Image</label>
+           <input 
             type="file" 
             @change="handleOnFile" 
             placeholder="urlImg" 
             ref="fileInput"
             accept="image/*"
-            />
-        <button type="submit">{{formProps.mode}}</button>
-        <button @click="formProps.closeModal">Close</button>
+            
+            /> 
+        </div>
+        <div class="marvel__form-buttons">
+            <button class="marvel__form-buttons--add" type="submit">{{formProps.mode}}</button>
+        <button class="marvel__form-buttons--close" @click="formProps.closeModal">Close</button>
+        </div>
+        
     </form>
 </template>
 
@@ -72,5 +89,51 @@ console.log(props.formProps)
 
 
 <style>
+.marvel_form-title{
+    text-align: center;
+    font-weight: 700;
+    font-size: 1.2rem;
+}
 
+.marvel__form input, .marvel__form textarea{
+    box-sizing: border-box;
+    border: 1px solid #000;
+    padding: 0.5rem;
+}
+.marvel__form>div {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+}
+.marvel__form>div label {
+    font-weight: 700;
+}
+.marvel__form_input--error{
+    color: tomato;
+    font-weight: 700;
+}
+.marvel__form .marvel__form-buttons{
+    flex-direction: initial;
+    justify-content: space-evenly;
+}
+.marvel__form-buttons--close,
+.marvel__form-buttons--add{
+  
+    border: 1px solid black;
+    font-weight: 700;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+.marvel__form-buttons--add{
+     padding: 0.5rem 1.5rem;
+    background: navy;
+    box-shadow: 3px 3px 0px 0px orange;
+    color: white;
+}
+
+.marvel__form-buttons--close{
+     padding: 0.5rem 1rem;
+    background: #ffffff;
+    box-shadow: 3px 3px 0px 0px rgb(155 155 155);
+}
 </style>

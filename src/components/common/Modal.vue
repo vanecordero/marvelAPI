@@ -26,13 +26,24 @@
   justify-content: center;
   align-items: center;
 }
-.modal div{
-  background-color: #fff;
-  padding: 50px;
-  border-radius: 10px;
+.modal > div{
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 1rem;
+    width: 90%;
 }
 
-@media (min-width: 1024px) {
-
+/* Media Query for Tablets Ipads portrait mode */
+@media (min-width: 768px) and (max-width: 1024px){
+.modal > div{
+  width: 80%;
+}
+}
+  
+/* Media Query for Laptops and Desktops */
+@media (min-width: 1025px) {
+.modal > div{
+  width: 50%;
+}
 }
 </style>
