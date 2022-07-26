@@ -1,29 +1,31 @@
 import { BASE_URL, API_KEY } from "@/config/marvelAPI.js";
-import axios from "axios";
 
-export function getCharacters(limit = 20, offset = 0) {
-  const url = `${BASE_URL}?limit=${limit}&offset=${offset}&${API_KEY}`;
+const nextGroup = (_page, limit) => _page * limit;
 
-  let resp = [];
+export async function fetchCharacters(_page, limit, optionSearchParams = "") {
+  const response = await fetch(
+    `${BASE_URL}?limit=${limit}&offset=${nextGroup(
+      _page,
+      limit
+    )}${optionSearchParams}&${API_KEY}`
+  );
+  const charactersRaw = await response.json();
 
-  axios
-    .get(url)
-    .then((results) => {
-      const {
-        data: { data },
-      } = results;
-      console.log("data", data);
+  const hasMore = charactersRaw.data.total > nextGroup(_page, limit);
 
-      data.results.forEach((dataCharacter) => {
-        resp.push(dataCharacter);
-      });
-      console.log("resp", resp);
+  const result = charactersRaw.data.results.map((character) => {
+    return {
+      id: character.id,
+      name: character.name,
+      description: character.description,
+      src: character.thumbnail.path + "." + character.thumbnail.extension,
+      modified: character.modified,
+    };
+  });
 
-      return resp;
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-
-  console.log("url", url);
+  return {
+    results: result,
+    totalElements: charactersRaw.data.total,
+    hasMore: hasMore,
+  };
 }

@@ -1,133 +1,128 @@
 
 <template>
-  <h2 class="app__title">The characters</h2>
-  <button @click="openModal = true">Add new character</button>
-  <Modal v-if="openModal">
-  <FormAddCharacter :functions="{
-    closeModal:closeModal,
-    handleSubmit:insertNewcharater
-  }"/>
-  </Modal>
-  <!-- <teleport to="body">
-    <div class="modal" v-if="openModal">
-      <div>
-        <p>Agregar cherater</p>
-        <form @submit.prevent="handleSubmit">
-          <input name="name" placeholder="name"/>
-          <input name="description" placeholder="description"/>
-           <input name="urlImg" type="file" @change="handleOnFile" placeholder="urlImg" ref="fileInput"/>
-      <button type="submit">add</button>
-      <button @click="openModal = false">close</button>
-        </form>
-      </div>
+
+  <section class="marvel__header font_marvel">
+    <h1 class="marvel__header-title ">Marvel characters</h1>
+    <div class="marvel__header-search">
+      <SearchVue :method="handleSearch" />
     </div>
-  </teleport>
-   -->
+    <div  class="marvel__header-addBtn">
+      <button 
+        class="font__comicReg"
+        @click="handleOpenModal('Add')"
+      >
+      Add new character</button>
+    </div>
+  </section>
 
-
+  <Modal v-if="openModal">
+    <FormAddCharacter 
+      :formProps="{
+        closeModal: closeModal,
+        setNewData: updateCharaterList,
+        handleClickEdit: handleOpenModal,
+        lastId: startId,
+        mode: mode,
+        ele: element
+      }"
+    />
+  </Modal>
 
   <div v-if="isLoading && page ===0">
       loading...
     </div>
-  <div v-else class="app__view">    
-    <CharacterCard v-for="character in characters" :key="character.name" :info="character" />
-  </div>
+  <div v-else class="marvel__characters-ctn">    
+    <CharacterCard 
+      v-for="(character, index) in characters" 
+      :key="character.name" 
+      :info="character" 
+      :index="index" 
+      :method="handleOpenModal"
+    />
+  </div>    
   <div class="app__container">
-    <div class="spinner" v-if="isLoading"></div>
-    <p>Dizq el boton</p>
-    <a href="" class="click__button app__more" v-if="hasMore && !isLoading" @click.prevent="moreData">Ver más</a>
+    <div class="spinner" v-if="isLoading">
+    ...loading
+    </div>
+    <a href="" class="loadData__button-click app__more" v-if="hasMoreElements && !isLoading" @click.prevent="moreData">Ver más</a>
+  </div>
+  <div 
+  class="moreData-end font_marvel"
+    v-show="!hasMoreElements && startId !==null"
+  >
+    <h5>No more data</h5>
   </div>
 </template>
 
 <script setup>
 import { onBeforeMount, onMounted, onUnmounted, ref } from "vue";
 import CharacterCard from "./Card.vue";
-import {BASE_URL, API_KEY} from '@/config/marvelAPI.js';
-import Modal from '../common/Modal/Modal.vue';
+import Modal from '../common/Modal.vue';
 import FormAddCharacter from "./FormAddCharacter.vue";
+import SearchVue from "../common/Search.vue";
+import { getFormValues } from "@/utils/getFormValues";
+import { fetchCharacters } from "@/utils/getCharacters";
 
+//modals const
+const openModal=ref(false);
+const mode = ref(null);
+//Data const
+const characters = ref([]);
+const isLoading = ref(true);
+//Fetch Data const
+const page = ref(0);
+const hasMoreElements = ref(false);
 const startId = ref(null)
 const limit = 10;
-const openModal=ref(false);
-const fileInput= ref(null);
-let characters = ref(Array.from({ length: 20 }, (v, i) => ({ id: "", name: "", src: "", description: "" , modified:""})));
-let page = ref(0);
-let hasMore = ref(false);
-let isLoading = ref(false);
-const getSkip = (_page) => _page * limit;
+const searchval =  ref("");
+//Edit const
+const element = ref(null);
+const elementIndex = ref(null);
 
-async function fetchCharacters(_page) {
-  isLoading.value = true;
-  const response = await fetch(`${BASE_URL}?limit=${limit}&offset=${getSkip(_page)}&${API_KEY}`);
-  const charactersRaw = await response.json();
- 
-   if(!startId.value) startId.value = charactersRaw.data.total;
-  hasMore.value = charactersRaw.data.total > getSkip(_page);
-    console.log(charactersRaw.data.total);
 
-  const result = charactersRaw.data.results.map((character) => {
-      return {
-        id: character.id,
-        name: character.name,
-        description: character.description,
-        src: character.thumbnail.path +'.' +character.thumbnail.extension,
-        modified: character.modified,
-      };
-    })
-    console.log(result)
-  isLoading.value = false;
-  return result;
-};
 async function moreData() {
   page.value++;
-  console.log(page)
-  const newCharacters = await fetchCharacters(page.value);
-  characters.value = [...characters.value, ...newCharacters];
+  const newCharacters = await fetchCharacters(page.value, limit, searchval.value );
+  characters.value = [...characters.value, ...newCharacters.results];
+  hasMoreElements.value= newCharacters.hasMore;
 };
-function scrolling({ target }) {
+
+const scrolling = ({ target }) => {
   const { scrollingElement } = target;
   const gap = 60;
   if (scrollingElement.scrollTop + scrollingElement.clientHeight + gap >= scrollingElement.scrollHeight) {
-    const button = document.querySelector(".click__button");
+    const button = document.querySelector(".loadData__button-click");
     button?.click();
   }
 };
-/*
-function handleSubmit(e){
-  console.log("submit")
-  console.log(e)
-  const formData = new FormData(e.target);
-  console.log(formData);
-  const formDataObj = {};
-    formData.forEach((value, key) => (formDataObj[key] = value));
-    console.log(formDataObj);
-    console.log(fileInput);
-    insertNewcharater(formDataObj, fileInput)
-};
-function handleOnFile(e) {
-      const files = e.target.files
-      if (!files.length) return
 
-      const reader = new FileReader()
-      reader.readAsDataURL(files[0])
-      reader.onload = () => fileInput.value = reader.result;
-}*/
-function insertNewcharater(data, imgsrc){
-   startId.value ++
+const updateCharaterList = (newVal)=>{
   openModal.value=false;
-  let newVal = {
-    id:startId.value,
-        name: data.name,
-        description: data.description,
-        src: imgsrc.value,
-        modified: new Date()
-  }
-  console.log(newVal)
-  characters.value.unshift(newVal)
+  mode.value === "Edit" 
+  ?  characters.value[elementIndex.value] = newVal
+  : characters.value.unshift(newVal)
 }
-function closeModal(){openModal.value = false}
+const closeModal = ()=>{openModal.value = false};
+const handleOpenModal = (modo, i=null, ele=null)=>{
+  openModal.value = true;
+  mode.value=modo;
+  element.value=ele;
+  elementIndex.value= i;
+}
+const handleSearch = async (e)=>{
+  const {search } = getFormValues(e.target);
+  searchval.value = search === "" ? "" :"&nameStartsWith="+search;
+  const {results} = await fetchCharacters(0, limit, searchval.value );
+  characters.value = results;
+}
+
+
 onBeforeMount(async () => {
-  characters.value = await fetchCharacters(page.value);
+  const {results, totalElements, hasMore} = await fetchCharacters(page.value, limit);
+  characters.value = results;
+  hasMoreElements.value = hasMore;
+  startId.value = totalElements;
+  isLoading.value = false;
 });
 onMounted(() => {
   window.addEventListener("scroll", scrolling);
@@ -139,27 +134,111 @@ onUnmounted(() => {
 
 
 <style>
-.app__view {
-  display: flex;
+.marvel__header{
+  z-index: 1;
+  margin-top: 50px;
+  width: 100%;
+  height: 100px;
+  position: fixed;
+  background: white;
+  border-bottom: 1px solid silver;
+ text-align: center;
+}
+.marvel__header-title{
+    letter-spacing: 3px;
+    font-size: 1.5rem;
+}
+.marvel__header-search{
+  padding: 0 1rem;
+}
+.marvel__header-addBtn{
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1rem;
+  z-index: 1;
+}
+.marvel__header-addBtn button{
+    padding: 0.5rem 1rem;
+    background: #ffd700;
+    border: 2px solid black;
+    font-weight: 700;
+    font-size: 0.9rem;
+    box-shadow: 4px 4px 0px 0px rgb(255 0 0);
+    cursor: pointer;
+}
+.marvel__characters-ctn {
+    display: flex;
     flex-direction: column;
     align-items: center;
+    gap: 1rem;
+     background: url("../../assets/bgComicBook.png") no-repeat center center fixed; 
+  background-size: cover;
+  padding-top: 160px;
+  padding-bottom: 1rem;
 }
 
-.modal{
-   position: fixed;
-  z-index: 999;
-  top: 0;
-  left: 0;
-  background-color: rgba(0, 0, 0, 0.555);
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.moreData-end{
+  height: 20vh;
+    background: black;
+    display: flex;
+    justify-content: center;
+    padding-top: 1rem;
+    color: white;
+    font-size: 1.5rem;
+    letter-spacing: 2px;
 }
-.modal div{
-  background-color: #fff;
-  padding: 50px;
-  border-radius: 10px;
+/* Media Query for Tablets Ipads portrait mode */
+@media (min-width: 768px) and (max-width: 1024px){
+  .marvel__header{
+  height: 115px;
+}
+.marvel__header-title{
+  font-size: 2rem;
+}
+.marvel__header-search{
+  width: 60%;
+  margin: auto;
+}
+.marvel__characters-ctn{
+  padding-top: 190px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  justify-items: center;
+}
+
+.marvel__header-addBtn {
+    bottom: 3rem;
+    right: 3rem;
+}
+.marvel__header-addBtn button {
+    font-size: 1.5rem;
+}
+}
+  
+/* Media Query for Laptops and Desktops */
+@media (min-width: 1025px) {
+   .marvel__header{
+    display: flex;
+    padding-left: 2rem;
+    height: 60px;
+   }
+.marvel__header-title{
+  font-size: 2rem;
+}
+.marvel__header-addBtn {
+    bottom: 2rem;
+    right: 3rem;
+}
+ 
+  .marvel__header-search{
+    width: none;
+    margin: none;
+  }
+.marvel__characters-ctn{
+      display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    justify-items: center;
+
+}
 }
 </style>
