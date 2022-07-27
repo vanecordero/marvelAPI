@@ -226,7 +226,5 @@ function parsedDate (val){
     box-shadow: 3px 3px 0px 0px rgb(155 155 155);
     cursor: pointer;
 }
-@media (min-width: 1024px) {
 
-}
 </style>

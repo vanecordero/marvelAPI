@@ -27,23 +27,21 @@
       }"
     />
   </Modal>
-
-  <div v-if="isLoading && page ===0">
-      loading...
-    </div>
-  <div v-else class="marvel__characters-ctn">    
-    <CharacterCard 
-      v-for="(character, index) in characters" 
-      :key="character.name" 
-      :info="character" 
-      :index="index" 
-      :method="handleOpenModal"
-    />
-  </div>    
+  <main class="marvel__main">
+    <div v-if="isLoading && page ===0">
+        <skeletonCardVue v-for="n in 10" :key="n"/>
+      </div>
+    <div v-else>    
+      <CharacterCard 
+        v-for="(character, index) in characters" 
+        :key="character.name" 
+        :info="character" 
+        :index="index" 
+        :method="handleOpenModal"
+      />
+    </div>   
+  </main> 
   <div class="app__container">
-    <div class="spinner" v-if="isLoading">
-    ...loading
-    </div>
     <a href="" class="loadData__button-click app__more" v-if="hasMoreElements && !isLoading" @click.prevent="moreData">Ver más</a>
   </div>
   <div 
@@ -62,6 +60,7 @@ import FormAddCharacter from "./FormAddCharacter.vue";
 import SearchVue from "../common/Search.vue";
 import { getFormValues } from "@/utils/getFormValues";
 import { fetchCharacters } from "@/utils/getCharacters";
+import skeletonCardVue from "../common/skeletonCard.vue";
 
 //modals const
 const openModal=ref(false);
@@ -166,14 +165,16 @@ onUnmounted(() => {
     box-shadow: 4px 4px 0px 0px rgb(255 0 0);
     cursor: pointer;
 }
-.marvel__characters-ctn {
+.marvel__main{
+  padding-top: 140px;
+  background: url("../../assets/bgComicBook.png") no-repeat center center fixed; 
+  background-size: cover;
+}
+.marvel__main > div {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 1rem;
-  background: url("../../assets/bgComicBook.png") no-repeat center center fixed; 
-  background-size: cover;
-  padding-top: 140px;
   padding-bottom: 1rem;
 }
 
@@ -199,8 +200,10 @@ onUnmounted(() => {
     width: 60%;
     margin: auto;
   }
-  .marvel__characters-ctn{
+  .marvel__main {
     padding-top: 160px;
+}
+  .marvel__main > div {
     display: grid;
     grid-template-columns: 1fr 1fr;
     justify-items: center;
@@ -236,11 +239,13 @@ onUnmounted(() => {
     width: none;
     margin: none;
   }
-  .marvel__characters-ctn{
+  .marvel__main {
+  padding-top: 130px;
+}
+ .marvel__main > div {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
     justify-items: center;
-    padding-top: 130px;
   }
   
 }
