@@ -39,14 +39,15 @@
         :index="index" 
         :method="handleOpenModal"
       />
-    </div>   
+    </div> 
+    <div class="app__container">
+      <a href="" class="loadData__button-click app__more" v-if="hasMoreElements && !isLoading" @click.prevent="moreData"></a>
+    </div>  
   </main> 
-  <div class="app__container">
-    <a href="" class="loadData__button-click app__more" v-if="hasMoreElements && !isLoading" @click.prevent="moreData">Ver más</a>
-  </div>
+  
   <div 
-  class="moreData-end font_marvel"
-    v-show="!hasMoreElements && startId !==null"
+    class="moreData--end font_marvel"
+    v-show="!hasMoreElements && startId !==null" 
   >
     <h5>No more data</h5>
   </div>
@@ -123,6 +124,7 @@ onBeforeMount(async () => {
   startId.value = totalElements;
   isLoading.value = false;
 });
+
 onMounted(() => {
   window.addEventListener("scroll", scrolling);
 });
@@ -178,7 +180,7 @@ onUnmounted(() => {
   padding-bottom: 1rem;
 }
 
-.moreData-end{
+.moreData--end{
   height: 20vh;
     background: black;
     display: flex;
@@ -215,6 +217,9 @@ onUnmounted(() => {
   }
   .marvel__header-addBtn button {
     font-size: 1.5rem;
+  }
+  .moreData--end{
+    font-size: 2rem;
   }
 }
   
