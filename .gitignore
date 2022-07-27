@@ -29,3 +29,5 @@ coverage
 
 
 marvelKey.js
+# Local Netlify folder
+.netlify
