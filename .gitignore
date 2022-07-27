@@ -28,6 +28,5 @@ coverage
 *.sw?
 
 
-marvelKey.js
 # Local Netlify folder
 .netlify
