@@ -43,7 +43,7 @@
   </main> 
 
   <div class="app__container">
-      <a href="" class="loadData__button-click app__more" v-if="hasMoreElements && !isLoading" @click.prevent="moreData"></a>
+      <a href="" class="loadData__button-click app__more" v-if="hasMoreElements && !isLoading" @click.prevent="moreData">See more</a>
     </div>  
   <div 
     class="moreData--end font_marvel"
@@ -138,12 +138,12 @@ onUnmounted(() => {
 .marvel__header{
     z-index: 1;
     width: 100%;
-    height: 120px;
+    height: 105px;
     position: fixed;
     background: white;
     border-bottom: 1px solid silver;
     text-align: center;
-    padding-top: 1rem;
+    padding-top: 0.5rem;
 }
 .marvel__header-title{
     letter-spacing: 3px;
@@ -168,7 +168,7 @@ onUnmounted(() => {
     cursor: pointer;
 }
 .marvel__main{
-  padding-top: 140px;
+  padding-top: 120px;
   background: url("../../assets/bgComicBook.png") no-repeat center center fixed; 
   background-size: cover;
   min-height: 100vh;
