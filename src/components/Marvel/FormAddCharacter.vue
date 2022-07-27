@@ -1,4 +1,6 @@
 <template>
+<Notification v-if="showNotf" :show="showNotf" :hide="hideNotification"/>  
+
     <p class="marvel_form-title font__comicReg">{{formProps.mode}} character</p>
     <form 
     class="marvel__form"
@@ -8,9 +10,9 @@
             <input 
                 name="name" 
                 placeholder="name"
-                :value="formProps.mode === 'Edit' ? formProps.ele.name : ''"
+                :value="formProps.mode === 'Edit' ? error ?'':formProps.ele.name : ''"
             />
-             <span v-if="error" class="marvel__form_input--error" >This field is required</span>
+             <span v-show="error" class="marvel__form_input--error" >This field is required</span>
 
         </div>
         <div>
@@ -41,6 +43,7 @@
         </div>
         
     </form>
+
 </template>
 
 
@@ -48,6 +51,7 @@
     import { ref } from "vue";
     import ShadowHero from '@/assets/shadow-hero.png';
     import { getFormValues } from "@/utils/getFormValues";
+    import Notification from "@/components/common/Notifications.vue"
 
     const props = defineProps({
     formProps: Object,
@@ -56,7 +60,10 @@
 console.log(props.formProps)
     const startId = ref(props.formProps.lastId); //get the total element from the MARVEL API
     const fileInput= ref(null);
-    const error = ref(false)
+    const error = ref(false);
+    const showNotf = ref(false);
+
+    const hideNotification=()=> showNotf.value= false;
 
     function handleOnFile(e) { //get the encodeIMG
         const files = e.target.files
@@ -69,6 +76,7 @@ console.log(props.formProps)
     function handleSubmit(e){
         const formDataObj = getFormValues(e.target);
         if(formDataObj.name.trim() ==="") {
+            showNotf.value= true;
             error.value=true;
             return 
         }
