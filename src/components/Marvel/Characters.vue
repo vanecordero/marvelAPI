@@ -39,12 +39,12 @@
         :index="index" 
         :method="handleOpenModal"
       />
-    </div> 
-    <div class="app__container">
-      <a href="" class="loadData__button-click app__more" v-if="hasMoreElements && !isLoading" @click.prevent="moreData"></a>
-    </div>  
+    </div>     
   </main> 
   
+  <div class="app__container">
+      <a href="" class="loadData__button-click app__more" v-if="hasMoreElements && !isLoading" @click.prevent="moreData"></a>
+    </div>  
   <div 
     class="moreData--end font_marvel"
     v-show="!hasMoreElements && startId !==null" 

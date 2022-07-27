@@ -13,6 +13,11 @@ const router = createRouter({
       name: "character",
       component: () => import("../views/MarvelCharacterDetailsView.vue"),
     },
+    {
+      path: "/:pathMatch(.*)*",
+      name: "NotFound",
+      component: () => import("../views/NotFoundView.vue"),
+    },
   ],
 });
 
