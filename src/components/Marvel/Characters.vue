@@ -41,7 +41,7 @@
       />
     </div>     
   </main> 
-  
+
   <div class="app__container">
       <a href="" class="loadData__button-click app__more" v-if="hasMoreElements && !isLoading" @click.prevent="moreData"></a>
     </div>  
@@ -171,6 +171,7 @@ onUnmounted(() => {
   padding-top: 140px;
   background: url("../../assets/bgComicBook.png") no-repeat center center fixed; 
   background-size: cover;
+  min-height: 100vh;
 }
 .marvel__main > div {
   display: flex;
