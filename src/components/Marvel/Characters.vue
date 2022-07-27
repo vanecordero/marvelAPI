@@ -135,14 +135,14 @@ onUnmounted(() => {
 
 <style>
 .marvel__header{
-  z-index: 1;
-  margin-top: 50px;
-  width: 100%;
-  height: 100px;
-  position: fixed;
-  background: white;
-  border-bottom: 1px solid silver;
- text-align: center;
+    z-index: 1;
+    width: 100%;
+    height: 120px;
+    position: fixed;
+    background: white;
+    border-bottom: 1px solid silver;
+    text-align: center;
+    padding-top: 1rem;
 }
 .marvel__header-title{
     letter-spacing: 3px;
@@ -167,13 +167,13 @@ onUnmounted(() => {
     cursor: pointer;
 }
 .marvel__characters-ctn {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
-     background: url("../../assets/bgComicBook.png") no-repeat center center fixed; 
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  background: url("../../assets/bgComicBook.png") no-repeat center center fixed; 
   background-size: cover;
-  padding-top: 160px;
+  padding-top: 140px;
   padding-bottom: 1rem;
 }
 
@@ -190,29 +190,29 @@ onUnmounted(() => {
 /* Media Query for Tablets Ipads portrait mode */
 @media (min-width: 768px) and (max-width: 1024px){
   .marvel__header{
-  height: 115px;
-}
-.marvel__header-title{
-  font-size: 2rem;
-}
-.marvel__header-search{
-  width: 60%;
-  margin: auto;
-}
-.marvel__characters-ctn{
-  padding-top: 190px;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  justify-items: center;
-}
+    height: 135px;
+  }
+  .marvel__header-title{
+    font-size: 2rem;
+  }
+  .marvel__header-search{
+    width: 60%;
+    margin: auto;
+  }
+  .marvel__characters-ctn{
+    padding-top: 160px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    justify-items: center;
+  }
 
-.marvel__header-addBtn {
+  .marvel__header-addBtn {
     bottom: 3rem;
     right: 3rem;
-}
-.marvel__header-addBtn button {
+  }
+  .marvel__header-addBtn button {
     font-size: 1.5rem;
-}
+  }
 }
   
 /* Media Query for Laptops and Desktops */
@@ -220,25 +220,28 @@ onUnmounted(() => {
    .marvel__header{
     display: flex;
     padding-left: 2rem;
-    height: 60px;
+    height: 100px;
+    padding-top: 0;
+    align-items: center;
    }
-.marvel__header-title{
-  font-size: 2rem;
-}
-.marvel__header-addBtn {
+  .marvel__header-title{
+    font-size: 2rem;
+  }
+  .marvel__header-addBtn {
     bottom: 2rem;
     right: 3rem;
-}
+  }
  
   .marvel__header-search{
     width: none;
     margin: none;
   }
-.marvel__characters-ctn{
-      display: grid;
+  .marvel__characters-ctn{
+    display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
     justify-items: center;
-
-}
+    padding-top: 130px;
+  }
+  
 }
 </style>
