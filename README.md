@@ -76,3 +76,8 @@ Construir una interfaz web responsive de los personajes de Marvel.
 - Netlify
 
 ### 🖼️ Pantallas
+![image](https://user-images.githubusercontent.com/47092867/181154996-8672f33a-7b16-41f1-bb2f-4baf12529bba.png) ![image](https://user-images.githubusercontent.com/47092867/181155301-0d0da16f-2b8e-4d92-a231-634b191206a4.png)
+
+![image](https://user-images.githubusercontent.com/47092867/181155140-99801c71-eaee-44dc-b991-e229a78d8b34.png)
+
+
